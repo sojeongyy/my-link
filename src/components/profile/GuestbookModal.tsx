@@ -13,24 +13,24 @@ interface GuestbookModalProps {
 const DEFAULT_MESSAGES: GuestbookEntry[] = [
   {
     id: '1',
-    author: '민지 (Minji)',
-    message: '포트폴리오 디자인 너무 깔끔하고 멋져요! 항상 응원합니다 🚀',
+    author: 'Tech Lead 준호',
+    message: 'TaskFlow AI 프로젝트 코드 구조가 굉장히 깔끔하네요! 응원합니다 🚀',
     createdAt: '방금 전',
-    emoji: '💖',
-  },
-  {
-    id: '2',
-    author: 'Dev Leo',
-    message: '로파이 플레이리스트 들으면서 야근 중인데 집중 잘되네요 ㅎㅎ 👍',
-    createdAt: '1시간 전',
     emoji: '🔥',
   },
   {
-    id: '3',
-    author: '지훈 (Jihun)',
-    message: '새로운 프로젝트 오픈 기대하고 있겠습니다! 화이팅!',
-    createdAt: '어제',
+    id: '2',
+    author: 'Frontend 수연',
+    message: 'Next.js 렌더링 최적화 블로그 글 보고 많은 인사이트 얻고 갑니다! ☕',
+    createdAt: '2시간 전',
     emoji: '✨',
+  },
+  {
+    id: '3',
+    author: 'Dev Minwoo',
+    message: '실시간 캔버스 데모 반응속도 엄청 빠르네요! 커피챗도 신청드렸습니다 👍',
+    createdAt: '어제',
+    emoji: '👏',
   },
 ];
 
@@ -45,16 +45,19 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
   const [selectedEmoji, setSelectedEmoji] = useState('💬');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('mylinke_guestbook');
-      if (saved) {
-        try {
-          setEntries(JSON.parse(saved));
-        } catch {
-          // ignore error
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('mylinke_guestbook_v2');
+        if (saved) {
+          try {
+            setEntries(JSON.parse(saved));
+          } catch {
+            // ignore error
+          }
         }
       }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!isOpen) return null;
@@ -74,7 +77,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
     const updated = [newEntry, ...entries];
     setEntries(updated);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('mylinke_guestbook', JSON.stringify(updated));
+      localStorage.setItem('mylinke_guestbook_v2', JSON.stringify(updated));
     }
     setAuthor('');
     setMessage('');
@@ -84,7 +87,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
     if (confirm('방명록을 초기화하시겠습니까?')) {
       setEntries(DEFAULT_MESSAGES);
       if (typeof window !== 'undefined') {
-        localStorage.setItem('mylinke_guestbook', JSON.stringify(DEFAULT_MESSAGES));
+        localStorage.setItem('mylinke_guestbook_v2', JSON.stringify(DEFAULT_MESSAGES));
       }
     }
   };

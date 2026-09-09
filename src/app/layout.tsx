@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "김소정 | 프로필 링크트리",
-  description: "안녕하세요! 바이브 코딩을 배우고 있는 대학생입니다.",
+  title: "이도현 (Alex Lee) | Full-Stack & Frontend Engineer",
+  description: "사용자 경험과 엔지니어링 완성도에 몰입하는 풀스택/프론트엔드 개발자 이도현의 링크트리 & 포트폴리오입니다.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

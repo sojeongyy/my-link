@@ -8,7 +8,6 @@ import {
   Share2,
   QrCode,
   ExternalLink,
-  MessageCircle,
 } from 'lucide-react';
 
 interface ShareModalProps {

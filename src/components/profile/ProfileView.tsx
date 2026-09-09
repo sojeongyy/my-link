@@ -9,6 +9,7 @@ import {
   Eye,
   Sparkles,
   CheckCircle2,
+  Code2,
 } from 'lucide-react';
 import { ProfileData, ThemeId } from '@/types/profile';
 import { INITIAL_PROFILE, THEMES } from '@/data/initialProfile';
@@ -19,7 +20,7 @@ import { GuestbookModal } from './GuestbookModal';
 import { EditProfileModal } from './EditProfileModal';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
-const STORAGE_KEY = 'mylinke_profile_data_v2';
+const STORAGE_KEY = 'mylinke_profile_data_v3';
 
 export const ProfileView: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData>(INITIAL_PROFILE);
@@ -33,21 +34,24 @@ export const ProfileView: React.FC = () => {
 
   // Load saved profile data from localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          setProfile(parsed);
-          setLikesCount(parsed.stats?.likes ?? INITIAL_PROFILE.stats.likes);
-          setViewsCount((parsed.stats?.views ?? INITIAL_PROFILE.stats.views) + 1);
-        } catch {
-          // ignore error
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            setProfile(parsed);
+            setLikesCount(parsed.stats?.likes ?? INITIAL_PROFILE.stats.likes);
+            setViewsCount((parsed.stats?.views ?? INITIAL_PROFILE.stats.views) + 1);
+          } catch {
+            // ignore error
+          }
+        } else {
+          setViewsCount((prev) => prev + 1);
         }
-      } else {
-        setViewsCount((prev) => prev + 1);
       }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const currentTheme = THEMES[profile.theme] || THEMES.clean;
@@ -188,7 +192,7 @@ export const ProfileView: React.FC = () => {
 
         {/* Centered Tags */}
         {profile.tags && profile.tags.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-1.5 mb-5">
+          <div className="flex flex-wrap justify-center gap-1.5 mb-3">
             {profile.tags.map((tag) => (
               <span
                 key={tag}
@@ -199,6 +203,25 @@ export const ProfileView: React.FC = () => {
             ))}
           </div>
         )}
+
+        {/* Tech Stack Pills */}
+        <div className="flex flex-col items-center gap-1.5 mb-5 max-w-xs sm:max-w-sm">
+          <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
+            <Code2 className="w-3.5 h-3.5 text-indigo-500" />
+            <span>CORE TECH STACK</span>
+          </div>
+          <div className="flex flex-wrap justify-center items-center gap-1.5">
+            {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL', 'Docker'].map((tech) => (
+              <span
+                key={tech}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-mono font-medium bg-zinc-100/90 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-700/60 shadow-2xs"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
 
         {/* Centered Social Icons */}
         <div className="w-full mb-6">
