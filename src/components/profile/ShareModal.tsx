@@ -70,131 +70,141 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm rounded-3xl bg-zinc-900 border border-zinc-700/80 p-6 text-white shadow-2xl transition-all"
+        className="relative w-full max-w-sm rounded-2xl bg-white text-black border-[2.5px] border-black shadow-brutal-xl overflow-hidden transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-          aria-label="닫기"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Modal Title */}
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-            <Share2 className="w-6 h-6" />
+        {/* Retro Window Header */}
+        <div className="bg-[#FEF08A] border-b-2 border-black px-3.5 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-black inline-block"></span>
           </div>
-          <h3 className="text-xl font-bold">프로필 공유하기</h3>
-          <p className="text-xs text-zinc-400 mt-1">
-            {profileName} ({handle}) 님의 링크를 친구들에게 공유하세요
-          </p>
-        </div>
-
-        {/* Tabs: Link vs QR */}
-        <div className="flex bg-zinc-800 rounded-xl p-1 mb-5">
+          <span className="font-mono text-[11px] font-black uppercase tracking-wider">
+            SHARE_MODAL.EXE
+          </span>
           <button
-            type="button"
-            onClick={() => setShowQr(false)}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-              !showQr ? 'bg-indigo-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
+            onClick={onClose}
+            className="w-6 h-6 rounded border border-black bg-white flex items-center justify-center hover:bg-[#FF80B5] active:translate-x-0.5 active:translate-y-0.5"
+            aria-label="닫기"
           >
-            링크 공유
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowQr(true)}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-              showQr ? 'bg-indigo-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <QrCode className="w-3.5 h-3.5" />
-            QR 코드
+            <X className="w-3.5 h-3.5 text-black" />
           </button>
         </div>
 
-        {/* QR Code Mode */}
-        {showQr ? (
-          <div className="flex flex-col items-center py-2">
-            <div className="p-3 bg-white rounded-2xl shadow-inner mb-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrCodeUrl}
-                alt="Profile QR Code"
-                width={180}
-                height={180}
-                className="rounded-lg"
-              />
-            </div>
-            <p className="text-[11px] text-zinc-400 text-center">
-              스마트폰 카메라로 스캔하여 프로필에 바로 접속하세요
+        {/* Modal Content */}
+        <div className="p-4 sm:p-5">
+          {/* Modal Title */}
+          <div className="text-center mb-4">
+            <h3 className="text-lg font-black tracking-tight uppercase">프로필 공유하기</h3>
+            <p className="text-xs font-mono text-zinc-600 mt-0.5">
+              {profileName} ({handle})
             </p>
           </div>
-        ) : (
-          /* Link Copy Mode */
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 p-2 bg-zinc-800/80 rounded-xl border border-zinc-700">
-              <input
-                type="text"
-                readOnly
-                value={currentUrl}
-                className="flex-1 bg-transparent px-2 text-xs text-zinc-200 outline-none select-all truncate"
-              />
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-semibold rounded-lg transition-all flex-shrink-0"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-300" />
-                    복사됨!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3.5 h-3.5" />
-                    복사
-                  </>
-                )}
-              </button>
-            </div>
 
-            {/* Quick Share Action Buttons */}
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              <button
-                onClick={handleNativeShare}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 bg-zinc-800 hover:bg-zinc-700 active:scale-95 rounded-xl text-xs font-medium transition-all"
-              >
-                <Share2 className="w-4 h-4 text-indigo-400" />
-                기기 공유
-              </button>
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `${profileName}님의 링크트리 프로필을 확인해보세요! #mylinke`
-                )}&url=${encodeURIComponent(currentUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-2.5 px-3 bg-zinc-800 hover:bg-zinc-700 active:scale-95 rounded-xl text-xs font-medium transition-all text-white"
-              >
-                <ExternalLink className="w-4 h-4 text-cyan-400" />
-                X(Twitter) 공유
-              </a>
-            </div>
+          {/* Tabs: Link vs QR */}
+          <div className="flex bg-[#F4F4F5] border-2 border-black rounded-xl p-1 mb-4">
+            <button
+              type="button"
+              onClick={() => setShowQr(false)}
+              className={`flex-1 py-1.5 text-xs font-mono font-black rounded-lg transition-all ${
+                !showQr ? 'bg-black text-white shadow-brutal-xs' : 'text-black hover:bg-zinc-200'
+              }`}
+            >
+              링크 복사
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowQr(true)}
+              className={`flex-1 py-1.5 text-xs font-mono font-black rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                showQr ? 'bg-black text-white shadow-brutal-xs' : 'text-black hover:bg-zinc-200'
+              }`}
+            >
+              <QrCode className="w-3.5 h-3.5" />
+              QR 코드
+            </button>
           </div>
-        )}
 
-        {/* Feedback Alert */}
-        {copied && (
-          <div className="mt-4 py-2 px-3 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs text-center font-medium animate-fadeIn">
-            ✨ 링크가 클립보드에 복사되었습니다!
-          </div>
-        )}
+          {/* QR Code Mode */}
+          {showQr ? (
+            <div className="flex flex-col items-center py-2">
+              <div className="p-3 bg-white border-2 border-black rounded-xl shadow-brutal-sm mb-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={qrCodeUrl}
+                  alt="Profile QR Code"
+                  width={170}
+                  height={170}
+                  className="rounded"
+                />
+              </div>
+              <p className="text-[11px] font-mono font-bold text-zinc-700 text-center">
+                카메라로 스캔하여 프로필에 바로 접속하세요!
+              </p>
+            </div>
+          ) : (
+            /* Link Copy Mode */
+            <div className="space-y-3">
+              <div className="flex items-center gap-1.5 p-1.5 bg-[#FFFBEB] rounded-xl border-2 border-black shadow-brutal-xs">
+                <input
+                  type="text"
+                  readOnly
+                  value={currentUrl}
+                  className="flex-1 bg-transparent px-2 text-xs font-mono font-bold text-black outline-none select-all truncate"
+                />
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#A3E635] hover:bg-[#86EFAC] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none text-black text-xs font-mono font-black border border-black shadow-brutal-xs rounded-lg transition-all flex-shrink-0"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-black" />
+                      복사됨!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-black" />
+                      복사
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Quick Share Action Buttons */}
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <button
+                  onClick={handleNativeShare}
+                  className="flex items-center justify-center gap-1.5 py-2 px-3 bg-white hover:bg-[#FEF08A] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black rounded-xl text-xs font-mono font-black text-black shadow-brutal-xs transition-all"
+                >
+                  <Share2 className="w-3.5 h-3.5 text-black" />
+                  기기 공유
+                </button>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    `${profileName}님의 링크트리 프로필을 확인해보세요! #mylinke`
+                  )}&url=${encodeURIComponent(currentUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#67E8F9] hover:bg-[#A5F3FC] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none border-2 border-black rounded-xl text-xs font-mono font-black text-black shadow-brutal-xs transition-all"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-black" />
+                  X 공유
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* Feedback Alert */}
+          {copied && (
+            <div className="mt-3 py-1.5 px-3 bg-[#A3E635] border-2 border-black rounded-xl text-black text-xs font-mono font-black text-center shadow-brutal-xs animate-fadeIn">
+              ★ 클립보드에 복사 완료! ★
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -14,39 +14,54 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   currentTheme,
   onSelectTheme,
 }) => {
-  const themeList: { id: ThemeId; label: string; color: string }[] = [
-    { id: 'glass', label: '글래스', color: 'bg-indigo-600' },
-    { id: 'midnight', label: '미드나잇', color: 'bg-cyan-500' },
-    { id: 'sunset', label: '선셋', color: 'bg-rose-500' },
-    { id: 'emerald', label: '에메랄드', color: 'bg-emerald-500' },
-    { id: 'clean', label: '미니멀', color: 'bg-zinc-700' },
-    { id: 'cyberpunk', label: '사이버펑크', color: 'bg-yellow-400' },
+  const themeList: { id: ThemeId; label: string; color: string; activeBg: string }[] = [
+    { id: 'clean', label: '레몬', color: 'bg-[#FDE047]', activeBg: 'bg-[#FEF08A]' },
+    { id: 'glass', label: '버블검', color: 'bg-[#FF80B5]', activeBg: 'bg-[#FFD1E3]' },
+    { id: 'midnight', label: '다크', color: 'bg-[#121212]', activeBg: 'bg-zinc-800 text-white' },
+    { id: 'sunset', label: '선셋', color: 'bg-[#FB923C]', activeBg: 'bg-[#FED7AA]' },
+    { id: 'emerald', label: '민트', color: 'bg-[#4ADE80]', activeBg: 'bg-[#BBF7D0]' },
+    { id: 'cyberpunk', label: '사이언', color: 'bg-[#22D3EE]', activeBg: 'bg-[#CFFAFE]' },
   ];
 
   return (
-    <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-lg">
-      <div className="flex items-center gap-1 px-2 text-white/70 text-xs font-medium">
-        <Palette className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">테마</span>
+    <nav
+      aria-label="테마 선택"
+      className="max-w-[calc(100vw-24px)] flex items-center gap-1 p-1 sm:p-1.5 rounded-xl bg-white text-black border-2 border-black shadow-brutal overflow-x-auto no-scrollbar"
+    >
+      <div className="flex items-center gap-1 pl-1.5 pr-1 text-black font-mono text-xs font-black flex-shrink-0">
+        <Palette className="w-3.5 h-3.5 text-black" />
+        <span className="hidden sm:inline text-[11px] uppercase tracking-wider">THEME</span>
       </div>
-      <div className="flex items-center gap-1">
-        {themeList.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => onSelectTheme(t.id)}
-            title={THEMES[t.id].name}
-            className={`flex items-center gap-1 px-2 py-1 rounded-xl text-xs transition-all ${
-              currentTheme === t.id
-                ? 'bg-white/20 text-white font-semibold shadow-sm scale-105 border border-white/30'
-                : 'text-white/60 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            <span className={`w-2 h-2 rounded-full ${t.color}`} />
-            <span className="text-[11px]">{t.label}</span>
-          </button>
-        ))}
+
+      <div className="flex items-center gap-1 flex-nowrap">
+        {themeList.map((t) => {
+          const isActive = currentTheme === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => onSelectTheme(t.id)}
+              title={THEMES[t.id].name}
+              className={`flex items-center justify-center gap-1.5 px-2 py-1 rounded-lg text-xs font-bold transition-all duration-100 flex-shrink-0 ${
+                isActive
+                  ? `${t.activeBg} border-2 border-black shadow-brutal-xs scale-100 font-black`
+                  : 'text-zinc-800 hover:bg-zinc-100 border-2 border-transparent hover:border-black active:translate-x-0.5 active:translate-y-0.5'
+              }`}
+            >
+              <span
+                className={`w-2.5 h-2.5 rounded-full border border-black flex-shrink-0 ${t.color}`}
+              />
+              <span
+                className={`text-[11px] font-mono whitespace-nowrap ${
+                  isActive ? 'inline font-black' : 'hidden sm:inline'
+                }`}
+              >
+                {t.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </nav>
   );
 };

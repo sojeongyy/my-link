@@ -59,4 +59,8 @@ export interface ThemeConfig {
   accent: string;
   accentGradient: string;
   border: string;
+  windowBarBg?: string;
+  tagBg?: string;
+  badgeBg?: string;
 }
+

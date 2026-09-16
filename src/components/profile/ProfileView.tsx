@@ -8,7 +8,6 @@ import {
   Heart,
   Eye,
   Sparkles,
-  CheckCircle2,
   Code2,
 } from 'lucide-react';
 import { ProfileData, ThemeId } from '@/types/profile';
@@ -22,6 +21,12 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 
 const STORAGE_KEY = 'mylinke_profile_data_v3';
 
+interface FloatingParticle {
+  id: number;
+  xOffset: number;
+  emoji: string;
+}
+
 export const ProfileView: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData>(INITIAL_PROFILE);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -30,7 +35,7 @@ export const ProfileView: React.FC = () => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(INITIAL_PROFILE.stats.likes);
   const [viewsCount, setViewsCount] = useState(INITIAL_PROFILE.stats.views);
-  const [showHeartAnim, setShowHeartAnim] = useState(false);
+  const [particles, setParticles] = useState<FloatingParticle[]>([]);
 
   // Load saved profile data from localStorage
   useEffect(() => {
@@ -56,25 +61,35 @@ export const ProfileView: React.FC = () => {
 
   const currentTheme = THEMES[profile.theme] || THEMES.clean;
 
-  // Handle Like Button click
+  // Handle Like Button click with playful particle burst
   const handleLike = () => {
-    if (!liked) {
-      setLikesCount((prev) => prev + 1);
-      setLiked(true);
-      setShowHeartAnim(true);
-      setTimeout(() => setShowHeartAnim(false), 1200);
+    setLikesCount((prev) => prev + 1);
+    setLiked(true);
 
-      const updated = {
-        ...profile,
-        stats: {
-          ...profile.stats,
-          likes: likesCount + 1,
-        },
-      };
-      setProfile(updated);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      }
+    const burstEmojis = ['💖', '✨', '❤️', '🔥'];
+    const newParticles: FloatingParticle[] = burstEmojis.map((emoji, idx) => ({
+      id: Date.now() + idx,
+      xOffset: (idx - 1.5) * 16,
+      emoji,
+    }));
+
+    setParticles((prev) => [...prev, ...newParticles]);
+    setTimeout(() => {
+      setParticles((prev) =>
+        prev.filter((p) => !newParticles.some((np) => np.id === p.id))
+      );
+    }, 1000);
+
+    const updated = {
+      ...profile,
+      stats: {
+        ...profile.stats,
+        likes: likesCount + 1,
+      },
+    };
+    setProfile(updated);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     }
   };
 
@@ -107,181 +122,221 @@ export const ProfileView: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen w-full transition-colors duration-300 flex flex-col items-center justify-start py-8 px-4 sm:px-6 relative ${currentTheme.background}`}
+      className={`min-h-dvh w-full transition-colors duration-200 flex flex-col items-center justify-start py-5 sm:py-9 px-3 sm:px-6 relative overflow-x-clip ${currentTheme.background}`}
     >
       {/* Top Floating Control Bar */}
-      <header className="w-full max-w-md flex items-center justify-between gap-2 mb-6 z-20">
+      <header className="w-full max-w-[440px] flex items-center justify-between gap-1.5 sm:gap-2 mb-3 sm:mb-4 z-20">
         <button
           onClick={() => setIsEditOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 backdrop-blur-md text-zinc-700 dark:text-zinc-200 text-xs font-medium transition-all hover:shadow-sm active:scale-95"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-black font-mono font-black text-[11px] sm:text-xs border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
         >
-          <Edit3 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
-          <span>프로필 편집</span>
+          <Edit3 className="w-3.5 h-3.5 text-black" />
+          <span>[ ✏️ EDIT PROFILE ]</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => setIsGuestbookOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 backdrop-blur-md text-zinc-700 dark:text-zinc-200 text-xs font-medium transition-all hover:shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF80B5] text-black font-mono font-black text-[11px] sm:text-xs border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
             title="방명록"
           >
-            <MessageSquareHeart className="w-3.5 h-3.5 text-pink-500" />
-            <span>방명록</span>
+            <MessageSquareHeart className="w-3.5 h-3.5 text-black" />
+            <span>[ 💌 GUESTBOOK ]</span>
           </button>
 
           <button
             onClick={() => setIsShareOpen(true)}
-            className="p-2 rounded-full bg-white/70 dark:bg-zinc-800/70 hover:bg-white dark:hover:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 backdrop-blur-md text-zinc-700 dark:text-zinc-200 transition-all hover:shadow-sm active:scale-95"
+            className="p-1.5 sm:p-2 rounded-lg bg-white text-black border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
             aria-label="공유하기"
             title="프로필 공유 & QR 코드"
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black" />
           </button>
         </div>
       </header>
 
-      {/* Main Centered Container */}
-      <main
-        className={`w-full max-w-md rounded-3xl p-6 sm:p-8 transition-all duration-300 relative z-10 flex flex-col items-center text-center ${currentTheme.containerBg}`}
-      >
-        {/* Centered Avatar */}
-        <div className="relative mb-4">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-indigo-200 via-rose-200 to-amber-200 dark:from-zinc-700 dark:to-zinc-800 shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={profile.avatarUrl}
-              alt={profile.name}
-              className="w-full h-full rounded-full object-cover bg-zinc-200 dark:bg-zinc-700"
-            />
-          </div>
-          {/* Active indicator */}
-          <span
-            className="absolute bottom-1 right-2 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-zinc-900 shadow-sm"
-            title="활동 중"
-          />
-        </div>
-
-        {/* Status Badge */}
-        {profile.statusBadge && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/60 text-zinc-700 dark:text-zinc-300 text-[11px] font-medium mb-3">
-            <Sparkles className="w-3 h-3 text-amber-500 animate-pulse" />
-            <span>{profile.statusBadge}</span>
-          </div>
-        )}
-
-        {/* Centered Name */}
-        <div className="flex items-center justify-center gap-1.5 mb-1">
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            {profile.name}
-          </h1>
-          <CheckCircle2
-            className="w-5 h-5 text-indigo-500 fill-indigo-500/10 dark:text-indigo-400"
-            aria-label="인증된 프로필"
-          />
-        </div>
-
-        {/* Centered Handle */}
-        <p className="text-xs font-mono text-zinc-400 dark:text-zinc-500 mb-3">
-          {profile.handle}
-        </p>
-
-        {/* Centered Bio */}
-        <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 whitespace-pre-line leading-relaxed max-w-xs sm:max-w-sm mb-4 font-normal">
-          {profile.bio}
-        </p>
-
-        {/* Centered Tags */}
-        {profile.tags && profile.tags.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-1.5 mb-3">
-            {profile.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/60 dark:border-zinc-700/50"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Tech Stack Pills */}
-        <div className="flex flex-col items-center gap-1.5 mb-5 max-w-xs sm:max-w-sm">
-          <div className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
-            <Code2 className="w-3.5 h-3.5 text-indigo-500" />
-            <span>CORE TECH STACK</span>
-          </div>
-          <div className="flex flex-wrap justify-center items-center gap-1.5">
-            {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'PostgreSQL', 'Docker'].map((tech) => (
-              <span
-                key={tech}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-mono font-medium bg-zinc-100/90 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-700/60 shadow-2xs"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Centered Social Icons */}
-        <div className="w-full mb-6">
-          <SocialLinks socials={profile.socials} />
-        </div>
-
-        {/* Centered Link Cards List */}
-        <div className="w-full space-y-3 mb-6">
-          {profile.links.map((link) => (
-            <LinkItemCard key={link.id} item={link} theme={currentTheme} />
-          ))}
-        </div>
-
-        {/* Centered Interactive Cheer (Like) & Views Bar */}
-        <div className="w-full pt-4 border-t border-zinc-200/60 dark:border-zinc-800 flex items-center justify-center gap-6 text-xs text-zinc-500 dark:text-zinc-400">
-          {/* Views count */}
+      {/* Main Retro OS Window Frame */}
+      <div className={`w-full max-w-[440px] rounded-2xl overflow-hidden transition-all duration-200 relative z-10 ${currentTheme.containerBg}`}>
+        {/* Retro Window Title Bar */}
+        <div className={`w-full ${currentTheme.windowBarBg || 'bg-[#FEF08A] border-b-2 border-black'} px-3.5 py-2 flex items-center justify-between select-none`}>
           <div className="flex items-center gap-1.5">
-            <Eye className="w-3.5 h-3.5" />
-            <span>조회수 {viewsCount.toLocaleString()}</span>
+            <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-black inline-block"></span>
           </div>
-
-          {/* Like button */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={handleLike}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full transition-all border ${
-                liked
-                  ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 font-semibold'
-                  : 'bg-zinc-100/80 dark:bg-zinc-800/60 border-zinc-200/70 dark:border-zinc-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300'
-              } active:scale-95`}
-              title="응원하기"
-            >
-              <Heart
-                className={`w-3.5 h-3.5 transition-transform ${
-                  liked ? 'fill-rose-500 text-rose-500 scale-110' : ''
-                }`}
-              />
-              <span>응원 {likesCount.toLocaleString()}</span>
-            </button>
-
-            {/* Floating Heart burst */}
-            {showHeartAnim && (
-              <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-sm animate-bounce font-bold text-rose-500">
-                💖 +1
-              </span>
-            )}
-          </div>
+          <span className="font-mono text-[11px] font-black tracking-wider uppercase text-black">
+            {profile.handle.replace('@', '')}.app // v2.0
+          </span>
+          <span className="text-[10px] font-mono font-black text-black px-1.5 py-0.2 rounded bg-white border border-black shadow-brutal-xs">
+            DEV ✦
+          </span>
         </div>
 
-        {/* Footer */}
-        <footer className="w-full pt-6 mt-4 text-center">
-          <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
-            © {new Date().getFullYear()} {profile.name} · Linktree
+        {/* Main Body */}
+        <main className="w-full p-4 sm:p-7 flex flex-col items-center text-center">
+          {/* Brutalist Avatar with hard shadow */}
+          <div className="relative mb-3.5">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-2 border-black bg-white shadow-brutal p-1 relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={profile.avatarUrl}
+                alt={profile.name}
+                className="w-full h-full rounded-xl object-cover bg-zinc-200"
+              />
+              {/* Online sticker */}
+              <span className="absolute -bottom-2 -right-2 px-1.5 py-0.5 rounded bg-[#A3E635] text-black border-2 border-black font-mono font-black text-[9.5px] shadow-brutal-xs rotate-[-3deg] whitespace-nowrap">
+                ● ONLINE
+              </span>
+            </div>
+          </div>
+
+          {/* Status Badge Sticker */}
+          {profile.statusBadge && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#FEF08A] text-black border-2 border-black font-mono font-black text-[10.5px] sm:text-[11px] mb-3 shadow-brutal-xs rotate-[-1deg] max-w-full text-center break-keep">
+              <Sparkles className="w-3.5 h-3.5 text-black flex-shrink-0" />
+              <span className="truncate">{profile.statusBadge}</span>
+            </div>
+          )}
+
+          {/* Name & Verified Badge */}
+          <div className="flex items-center justify-center gap-2 mb-1 max-w-full">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-black dark:text-inherit break-keep">
+              {profile.name}
+            </h1>
+            <span className="px-1.5 py-0.5 bg-[#A3E635] text-black border-2 border-black font-mono font-black text-[10px] shadow-brutal-xs rotate-2 flex-shrink-0">
+              VERIFIED ✦
+            </span>
+          </div>
+
+          {/* Handle */}
+          <p className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-400 mb-3">
+            [ {profile.handle} ]
           </p>
-        </footer>
-      </main>
+
+          {/* Memo Pad / Post-it Bio */}
+          <div className="relative w-full max-w-sm mb-4">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-[#FFFBEB] dark:bg-zinc-800 text-black dark:text-zinc-100 border-2 border-black shadow-brutal-xs text-xs sm:text-sm font-medium leading-relaxed text-left break-keep relative">
+              <div className="absolute -top-2 left-4 px-2 py-0.5 bg-black text-white text-[9px] font-mono font-black uppercase tracking-wider rounded">
+                MEMO // BIO
+              </div>
+              <p className="pt-1">{profile.bio}</p>
+            </div>
+          </div>
+
+          {/* Tags */}
+          {profile.tags && profile.tags.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-1.5 mb-3.5 max-w-full">
+              {profile.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-white text-black border-2 border-black shadow-brutal-xs hover:bg-[#FEF08A] transition-colors"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Core Tech Cartridge Rack */}
+          <div className="flex flex-col items-center gap-1.5 mb-4 w-full max-w-xs sm:max-w-sm">
+            <div className="flex items-center gap-1 text-[10px] sm:text-[10.5px] font-mono font-black uppercase text-black dark:text-zinc-300">
+              <Code2 className="w-3.5 h-3.5 text-black dark:text-white flex-shrink-0" />
+              <span>[ CORE TECH CARTRIDGES ]</span>
+            </div>
+            <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5">
+              {['React', 'Next.js', 'TypeScript', 'Tailwind', 'Node.js', 'PostgreSQL', 'Docker'].map(
+                (tech, i) => {
+                  const colors = [
+                    'bg-[#FEF08A]',
+                    'bg-[#67E8F9]',
+                    'bg-[#A3E635]',
+                    'bg-[#FF80B5]',
+                    'bg-[#FDBA74]',
+                    'bg-[#C084FC]',
+                    'bg-[#86EFAC]',
+                  ];
+                  return (
+                    <span
+                      key={tech}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-mono font-black text-black border-2 border-black shadow-brutal-xs ${
+                        colors[i % colors.length]
+                      }`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-black flex-shrink-0" />
+                      {tech}
+                    </span>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          {/* Social Icons */}
+          <div className="w-full mb-4 sm:mb-5">
+            <SocialLinks socials={profile.socials} />
+          </div>
+
+          {/* Link Cards List */}
+          <div className="w-full space-y-2.5 sm:space-y-3 mb-5 sm:mb-6">
+            {profile.links.map((link) => (
+              <LinkItemCard key={link.id} item={link} theme={currentTheme} />
+            ))}
+          </div>
+
+          {/* Arcade Scoreboard (Cheer & Views Bar) */}
+          <div className="w-full pt-4 border-t-2 border-black flex items-center justify-center gap-3 sm:gap-6 text-xs font-mono font-bold">
+            {/* Views count */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black bg-white text-black shadow-brutal-xs">
+              <Eye className="w-3.5 h-3.5 text-black flex-shrink-0" />
+              <span className="text-[11px] sm:text-xs font-black">
+                VIEWS: {viewsCount.toLocaleString()}
+              </span>
+            </div>
+
+            {/* Cheer / Like button */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={handleLike}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border-2 border-black bg-[#FF80B5] hover:bg-[#FFB5D5] text-black font-black shadow-brutal-sm hover:shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+                title="응원하기"
+              >
+                <Heart
+                  className={`w-3.5 h-3.5 fill-black text-black transition-transform ${
+                    liked ? 'scale-125' : ''
+                  }`}
+                />
+                <span className="text-[11px] sm:text-xs">
+                  CHEER: {likesCount.toLocaleString()}
+                </span>
+              </button>
+
+              {/* Floating Particles Burst */}
+              {particles.map((p) => (
+                <span
+                  key={p.id}
+                  style={{
+                    transform: `translateX(${p.xOffset}px)`,
+                  }}
+                  className="pointer-events-none absolute -top-5 left-1/2 text-sm animate-heartFloat font-black select-none z-30 drop-shadow-[1px_1px_0px_#000]"
+                >
+                  {p.emoji}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer className="w-full pt-4 mt-2 text-center">
+            <p className="font-mono font-bold text-[10.5px] text-zinc-800 dark:text-zinc-400">
+              © {new Date().getFullYear()} {profile.name} · ALL RIGHTS RESERVED
+            </p>
+          </footer>
+        </main>
+      </div>
 
       {/* Bottom Floating Theme Switcher */}
-      <div className="mt-6 z-20">
+      <div className="mt-4 sm:mt-5 z-20">
         <ThemeSwitcher
           currentTheme={profile.theme}
           onSelectTheme={handleThemeSelect}

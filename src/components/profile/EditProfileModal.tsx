@@ -7,7 +7,6 @@ import {
   Trash2,
   Check,
   RotateCcw,
-  Sparkles,
   Link as LinkIcon,
   Palette,
   User,
@@ -100,132 +99,149 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-xl rounded-3xl bg-zinc-900 border border-zinc-700/80 p-6 text-white shadow-2xl transition-all max-h-[90vh] flex flex-col"
+        className="relative w-full max-w-xl rounded-2xl bg-white text-black border-[2.5px] border-black shadow-brutal-xl overflow-hidden max-h-[90vh] flex flex-col transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">프로필 커스텀 & 설정</h3>
-              <p className="text-xs text-zinc-400">
-                내용과 테마를 자유롭게 수정하고 실시간으로 반영하세요
-              </p>
-            </div>
+        {/* Retro Window Top Header */}
+        <div className="bg-[#A3E635] border-b-2 border-black px-3.5 py-2 flex items-center justify-between select-none">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black inline-block"></span>
+            <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-black inline-block"></span>
           </div>
+          <span className="font-mono text-[11px] font-black uppercase tracking-wider text-black">
+            PROFILE_CONFIG.SETTINGS
+          </span>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-6 h-6 rounded border border-black bg-white flex items-center justify-center hover:bg-[#FF80B5] active:translate-x-0.5 active:translate-y-0.5"
             aria-label="닫기"
           >
-            <X className="w-5 h-5" />
+            <X className="w-3.5 h-3.5 text-black" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex bg-zinc-800/80 rounded-xl p-1 my-4 gap-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab('profile')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'profile' ? 'bg-indigo-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            기본 정보
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('links')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'links' ? 'bg-indigo-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <LinkIcon className="w-3.5 h-3.5" />
-            링크 관리 ({formData.links.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('theme')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'theme' ? 'bg-indigo-600 text-white shadow' : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            <Palette className="w-3.5 h-3.5" />
-            테마 디자인
-          </button>
+        <div className="p-3 sm:p-4 pb-0">
+          <div className="flex bg-[#F4F4F5] border-2 border-black rounded-xl p-1 gap-1">
+            <button
+              type="button"
+              onClick={() => setActiveTab('profile')}
+              className={`flex-1 py-2 text-xs font-mono font-black rounded-lg flex items-center justify-center gap-1 transition-all ${
+                activeTab === 'profile'
+                  ? 'bg-black text-white shadow-brutal-xs'
+                  : 'text-black hover:bg-zinc-200'
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>기본 정보</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('links')}
+              className={`flex-1 py-2 text-xs font-mono font-black rounded-lg flex items-center justify-center gap-1 transition-all ${
+                activeTab === 'links'
+                  ? 'bg-black text-white shadow-brutal-xs'
+                  : 'text-black hover:bg-zinc-200'
+              }`}
+            >
+              <LinkIcon className="w-3.5 h-3.5" />
+              <span>링크 ({formData.links.length})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('theme')}
+              className={`flex-1 py-2 text-xs font-mono font-black rounded-lg flex items-center justify-center gap-1 transition-all ${
+                activeTab === 'theme'
+                  ? 'bg-black text-white shadow-brutal-xs'
+                  : 'text-black hover:bg-zinc-200'
+              }`}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>테마 디자인</span>
+            </button>
+          </div>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto pr-1 space-y-4 text-xs">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 text-xs no-scrollbar">
           {/* TAB 1: Profile Info */}
           {activeTab === 'profile' && (
             <div className="space-y-3">
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">이름 (Display Name)</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  이름 (Display Name)
+                </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleTextChange('name', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">사용자 핸들 (@handle)</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  사용자 핸들 (@handle)
+                </label>
                 <input
                   type="text"
                   value={formData.handle}
                   onChange={(e) => handleTextChange('handle', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">상태 배지 문구</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  상태 배지 스티커
+                </label>
                 <input
                   type="text"
                   value={formData.statusBadge || ''}
                   onChange={(e) => handleTextChange('statusBadge', e.target.value)}
-                  placeholder="예: 🟢 프로젝트 & 커피챗 문의 환영"
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                  placeholder="예: 🟢 사이드 프로젝트 & 커피챗 열려있음"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">소개글 (Bio)</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  소개글 (Bio)
+                </label>
                 <textarea
                   rows={3}
                   value={formData.bio}
                   onChange={(e) => handleTextChange('bio', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500 resize-none leading-relaxed"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs resize-none leading-relaxed"
                 />
               </div>
 
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">위치 (Location)</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  위치 (Location)
+                </label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => handleTextChange('location', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-zinc-400 mb-1 font-medium">프로필 이미지 URL</label>
+                <label className="block text-black mb-1 font-mono font-black uppercase">
+                  프로필 아바타 이미지 URL
+                </label>
                 <input
                   type="text"
                   value={formData.avatarUrl}
                   onChange={(e) => handleTextChange('avatarUrl', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                  className="w-full bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3] shadow-brutal-xs"
                 />
               </div>
             </div>
@@ -235,22 +251,24 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           {activeTab === 'links' && (
             <div className="space-y-4">
               {/* Add New Link Card */}
-              <div className="p-3.5 bg-zinc-800/80 rounded-2xl border border-zinc-700/80 space-y-2.5">
-                <span className="font-semibold text-zinc-200 block">새 링크 추가하기</span>
+              <div className="p-3.5 bg-[#FFFBEB] rounded-xl border-2 border-black shadow-brutal-xs space-y-2.5">
+                <span className="font-mono font-black text-black block uppercase tracking-wide">
+                  [ + 새 링크 추가하기 ]
+                </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <input
                     type="text"
                     placeholder="링크 제목 (예: 블로그 보러가기)"
                     value={newLinkTitle}
                     onChange={(e) => setNewLinkTitle(e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                    className="bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3]"
                   />
                   <input
                     type="text"
                     placeholder="연결 URL (https://...)"
                     value={newLinkUrl}
                     onChange={(e) => setNewLinkUrl(e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                    className="bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3]"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -259,66 +277,68 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     placeholder="부제목 (선택사항)"
                     value={newLinkSubtitle}
                     onChange={(e) => setNewLinkSubtitle(e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                    className="bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3]"
                   />
                   <input
                     type="text"
                     placeholder="배지 라벨 (예: NEW, HOT)"
                     value={newLinkBadge}
                     onChange={(e) => setNewLinkBadge(e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-indigo-500"
+                    className="bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-mono font-bold outline-none focus:bg-[#FEF9C3]"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleAddLink}
-                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2 bg-[#FEF08A] hover:bg-[#FDE047] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none text-black font-mono font-black border-2 border-black rounded-xl shadow-brutal-xs transition-all flex items-center justify-center gap-1.5"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 text-black" />
                   링크 목록에 추가
                 </button>
               </div>
 
               {/* Existing Links List */}
               <div className="space-y-2">
-                <span className="font-semibold text-zinc-400 block">등록된 링크 ({formData.links.length})</span>
+                <span className="font-mono font-black text-black block uppercase">
+                  등록된 링크 ({formData.links.length})
+                </span>
                 {formData.links.map((link) => (
                   <div
                     key={link.id}
-                    className="p-3 bg-zinc-800 rounded-xl border border-zinc-700/60 flex items-center justify-between gap-3"
+                    className="p-3 bg-white rounded-xl border-2 border-black shadow-brutal-xs flex items-center justify-between gap-2"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-zinc-100 truncate">{link.title}</span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono font-black text-black truncate">{link.title}</span>
                         {link.featured && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-                            강조됨
+                          <span className="px-1.5 py-0.2 rounded bg-[#FEF08A] text-black font-mono font-black text-[10px] border border-black shadow-brutal-xs">
+                            ★ 강조
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-zinc-400 truncate">{link.url}</p>
+                      <p className="text-[11px] font-mono text-zinc-600 truncate">{link.url}</p>
                     </div>
 
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
                       <button
                         type="button"
                         onClick={() => handleToggleFeatured(link.id)}
-                        className={`px-2 py-1 rounded-lg text-[11px] transition-colors ${
+                        className={`px-2 py-1 rounded-lg border-2 border-black font-mono font-black text-[11px] transition-all ${
                           link.featured
-                            ? 'bg-amber-500/30 text-amber-300'
-                            : 'bg-zinc-700 text-zinc-400 hover:text-white'
+                            ? 'bg-[#FEF08A] text-black shadow-brutal-xs'
+                            : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                         }`}
-                        title="강조 효과 토글"
+                        title="강조 토글"
                       >
-                        ⭐ 강조
+                        ⭐
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteLink(link.id)}
-                        className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20 transition-colors"
+                        className="p-1 rounded-lg border-2 border-black bg-[#FCA5A5] hover:bg-[#F87171] text-black shadow-brutal-xs transition-all"
                         title="삭제"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4 text-black" />
                       </button>
                     </div>
                   </div>
@@ -338,24 +358,24 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     key={themeId}
                     type="button"
                     onClick={() => setFormData((prev) => ({ ...prev, theme: themeId }))}
-                    className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden ${
+                    className={`p-3.5 rounded-xl border-2 border-black text-left transition-all relative overflow-hidden ${
                       item.background
                     } ${
                       isSelected
-                        ? 'ring-2 ring-indigo-400 border-white/50 scale-[1.02]'
-                        : 'border-white/10 hover:border-white/30 opacity-80 hover:opacity-100'
+                        ? 'shadow-brutal ring-2 ring-black scale-[1.01]'
+                        : 'shadow-brutal-xs hover:shadow-brutal opacity-90 hover:opacity-100'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-bold text-white text-sm">{item.name}</span>
+                      <span className="font-mono font-black text-black text-sm">{item.name}</span>
                       {isSelected && (
-                        <span className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white">
-                          <Check className="w-3 h-3 stroke-[3]" />
+                        <span className="w-5 h-5 rounded border-2 border-black bg-black flex items-center justify-center text-white">
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
                         </span>
                       )}
                     </div>
-                    <div className="h-6 rounded-lg bg-white/20 backdrop-blur-sm border border-white/20 flex items-center px-2 text-[10px] text-white">
-                      미리보기 카드 스타일
+                    <div className="h-6 rounded bg-white border border-black flex items-center px-2 text-[10px] font-mono font-bold text-black shadow-brutal-xs">
+                      NEO-BRUTAL PREVIEW
                     </div>
                   </button>
                 );
@@ -365,27 +385,27 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-4 mt-2 border-t border-zinc-800">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-t-2 border-black bg-[#F4F4F5]">
           <button
             type="button"
             onClick={handleResetConfirm}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-black bg-white hover:bg-[#FECDD3] text-black font-mono font-black text-xs shadow-brutal-xs active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            초기화
+            <RotateCcw className="w-3.5 h-3.5 text-black" />
+            <span>초기화</span>
           </button>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-zinc-300 hover:bg-zinc-800 transition-colors text-xs font-medium"
+              className="px-3.5 py-1.5 rounded-xl border-2 border-black bg-white hover:bg-zinc-100 text-black font-mono font-bold text-xs shadow-brutal-xs active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
             >
               취소
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white transition-all text-xs font-semibold shadow-lg shadow-indigo-600/30"
+              className="px-4 py-1.5 rounded-xl border-2 border-black bg-[#A3E635] hover:bg-[#86EFAC] text-black font-mono font-black text-xs shadow-brutal-xs active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
             >
               저장하기
             </button>
