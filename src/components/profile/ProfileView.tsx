@@ -1,25 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  Share2,
-  Edit3,
-  MessageSquareHeart,
-  Heart,
-  Eye,
-  Sparkles,
-  Code2,
-} from 'lucide-react';
-import { ProfileData, ThemeId } from '@/types/profile';
-import { INITIAL_PROFILE, THEMES } from '@/data/initialProfile';
-import { SocialLinks } from './SocialLinks';
+import { Heart, Eye, ChevronRight } from 'lucide-react';
+import { ProfileData } from '@/types/profile';
+import { INITIAL_PROFILE } from '@/data/initialProfile';
 import { LinkItemCard } from './LinkItemCard';
 import { ShareModal } from './ShareModal';
 import { GuestbookModal } from './GuestbookModal';
 import { EditProfileModal } from './EditProfileModal';
-import { ThemeSwitcher } from './ThemeSwitcher';
 
-const STORAGE_KEY = 'mylinke_profile_data_v3';
+const STORAGE_KEY = 'mylinke_profile_data_v4';
 
 interface FloatingParticle {
   id: number;
@@ -59,8 +49,6 @@ export const ProfileView: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const currentTheme = THEMES[profile.theme] || THEMES.clean;
-
   // Handle Like Button click with playful particle burst
   const handleLike = () => {
     setLikesCount((prev) => prev + 1);
@@ -93,15 +81,6 @@ export const ProfileView: React.FC = () => {
     }
   };
 
-  // Handle Theme Change
-  const handleThemeSelect = (themeId: ThemeId) => {
-    const updated = { ...profile, theme: themeId };
-    setProfile(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    }
-  };
-
   // Save profile changes
   const handleSaveProfile = (updated: ProfileData) => {
     setProfile(updated);
@@ -121,226 +100,459 @@ export const ProfileView: React.FC = () => {
   };
 
   return (
-    <div
-      className={`min-h-dvh w-full transition-colors duration-200 flex flex-col items-center justify-start py-5 sm:py-9 px-3 sm:px-6 relative overflow-x-clip ${currentTheme.background}`}
-    >
-      {/* Top Floating Control Bar */}
-      <header className="w-full max-w-[440px] flex items-center justify-between gap-1.5 sm:gap-2 mb-3 sm:mb-4 z-20">
-        <button
-          onClick={() => setIsEditOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-black font-mono font-black text-[11px] sm:text-xs border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+    /* Nintendo.com 2001 Chrome */
+    <div className="min-h-dvh w-full flex flex-col items-center bg-[#7a8aba] overflow-x-clip font-sans">
+      {/* Fixed-width chrome container */}
+      <div className="w-full max-w-[780px]">
+
+        {/* 1. CARBON NAV BAR */}
+        <nav
+          className="halftone w-full flex items-center px-2 gap-2 select-none"
+          style={{ backgroundColor: '#21242e', height: 32 }}
         >
-          <Edit3 className="w-3.5 h-3.5 text-black" />
-          <span>[ ✏️ EDIT PROFILE ]</span>
-        </button>
-
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setIsGuestbookOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF80B5] text-black font-mono font-black text-[11px] sm:text-xs border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-            title="방명록"
+          {/* Logo pill */}
+          <span
+            className="font-black uppercase tracking-wider flex-shrink-0"
+            style={{
+              backgroundColor: '#ffffff',
+              color: '#3d4f97',
+              fontSize: 10,
+              padding: '2px 8px',
+              borderRadius: 9999,
+              border: '1px solid #3d4f97',
+            }}
           >
-            <MessageSquareHeart className="w-3.5 h-3.5 text-black" />
-            <span>[ 💌 GUESTBOOK ]</span>
-          </button>
-
-          <button
-            onClick={() => setIsShareOpen(true)}
-            className="p-1.5 sm:p-2 rounded-lg bg-white text-black border-2 border-black shadow-brutal-xs hover:shadow-brutal-sm hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-            aria-label="공유하기"
-            title="프로필 공유 & QR 코드"
-          >
-            <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-black" />
-          </button>
-        </div>
-      </header>
-
-      {/* Main Retro OS Window Frame */}
-      <div className={`w-full max-w-[440px] rounded-2xl overflow-hidden transition-all duration-200 relative z-10 ${currentTheme.containerBg}`}>
-        {/* Retro Window Title Bar */}
-        <div className={`w-full ${currentTheme.windowBarBg || 'bg-[#FEF08A] border-b-2 border-black'} px-3.5 py-2 flex items-center justify-between select-none`}>
-          <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-black inline-block"></span>
-            <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-black inline-block"></span>
-            <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-black inline-block"></span>
-          </div>
-          <span className="font-mono text-[11px] font-black tracking-wider uppercase text-black">
-            {profile.handle.replace('@', '')}.app // v2.0
+            SJ.
           </span>
-          <span className="text-[10px] font-mono font-black text-black px-1.5 py-0.2 rounded bg-white border border-black shadow-brutal-xs">
-            DEV ✦
-          </span>
-        </div>
 
-        {/* Main Body */}
-        <main className="w-full p-4 sm:p-7 flex flex-col items-center text-center">
-          {/* Brutalist Avatar with hard shadow */}
-          <div className="relative mb-3.5">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-2 border-black bg-white shadow-brutal p-1 relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={profile.avatarUrl}
-                alt={profile.name}
-                className="w-full h-full rounded-xl object-cover bg-zinc-200"
-              />
-              {/* Online sticker */}
-              <span className="absolute -bottom-2 -right-2 px-1.5 py-0.5 rounded bg-[#A3E635] text-black border-2 border-black font-mono font-black text-[9.5px] shadow-brutal-xs rotate-[-3deg] whitespace-nowrap">
-                ● ONLINE
+          {/* Nav words */}
+          <div className="hidden sm:flex items-center gap-3 ml-1">
+            {['PROFILE', 'LINKS', 'RESEARCH', 'CONTACT'].map((w) => (
+              <span
+                key={w}
+                className="font-bold uppercase cursor-default"
+                style={{ color: '#e48600', fontSize: 11, letterSpacing: '0.05em' }}
+              >
+                {w}
               </span>
-            </div>
-          </div>
-
-          {/* Status Badge Sticker */}
-          {profile.statusBadge && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#FEF08A] text-black border-2 border-black font-mono font-black text-[10.5px] sm:text-[11px] mb-3 shadow-brutal-xs rotate-[-1deg] max-w-full text-center break-keep">
-              <Sparkles className="w-3.5 h-3.5 text-black flex-shrink-0" />
-              <span className="truncate">{profile.statusBadge}</span>
-            </div>
-          )}
-
-          {/* Name & Verified Badge */}
-          <div className="flex items-center justify-center gap-2 mb-1 max-w-full">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-black dark:text-inherit break-keep">
-              {profile.name}
-            </h1>
-            <span className="px-1.5 py-0.5 bg-[#A3E635] text-black border-2 border-black font-mono font-black text-[10px] shadow-brutal-xs rotate-2 flex-shrink-0">
-              VERIFIED ✦
-            </span>
-          </div>
-
-          {/* Handle */}
-          <p className="text-xs font-mono font-bold text-zinc-600 dark:text-zinc-400 mb-3">
-            [ {profile.handle} ]
-          </p>
-
-          {/* Memo Pad / Post-it Bio */}
-          <div className="relative w-full max-w-sm mb-4">
-            <div className="p-3 sm:p-3.5 rounded-xl bg-[#FFFBEB] dark:bg-zinc-800 text-black dark:text-zinc-100 border-2 border-black shadow-brutal-xs text-xs sm:text-sm font-medium leading-relaxed text-left break-keep relative">
-              <div className="absolute -top-2 left-4 px-2 py-0.5 bg-black text-white text-[9px] font-mono font-black uppercase tracking-wider rounded">
-                MEMO // BIO
-              </div>
-              <p className="pt-1">{profile.bio}</p>
-            </div>
-          </div>
-
-          {/* Tags */}
-          {profile.tags && profile.tags.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-1.5 mb-3.5 max-w-full">
-              {profile.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-white text-black border-2 border-black shadow-brutal-xs hover:bg-[#FEF08A] transition-colors"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Core Tech Cartridge Rack */}
-          <div className="flex flex-col items-center gap-1.5 mb-4 w-full max-w-xs sm:max-w-sm">
-            <div className="flex items-center gap-1 text-[10px] sm:text-[10.5px] font-mono font-black uppercase text-black dark:text-zinc-300">
-              <Code2 className="w-3.5 h-3.5 text-black dark:text-white flex-shrink-0" />
-              <span>[ CORE TECH CARTRIDGES ]</span>
-            </div>
-            <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5">
-              {['React', 'Next.js', 'TypeScript', 'Tailwind', 'Node.js', 'PostgreSQL', 'Docker'].map(
-                (tech, i) => {
-                  const colors = [
-                    'bg-[#FEF08A]',
-                    'bg-[#67E8F9]',
-                    'bg-[#A3E635]',
-                    'bg-[#FF80B5]',
-                    'bg-[#FDBA74]',
-                    'bg-[#C084FC]',
-                    'bg-[#86EFAC]',
-                  ];
-                  return (
-                    <span
-                      key={tech}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] sm:text-[10.5px] font-mono font-black text-black border-2 border-black shadow-brutal-xs ${
-                        colors[i % colors.length]
-                      }`}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-black flex-shrink-0" />
-                      {tech}
-                    </span>
-                  );
-                }
-              )}
-            </div>
-          </div>
-
-          {/* Social Icons */}
-          <div className="w-full mb-4 sm:mb-5">
-            <SocialLinks socials={profile.socials} />
-          </div>
-
-          {/* Link Cards List */}
-          <div className="w-full space-y-2.5 sm:space-y-3 mb-5 sm:mb-6">
-            {profile.links.map((link) => (
-              <LinkItemCard key={link.id} item={link} theme={currentTheme} />
             ))}
           </div>
 
-          {/* Arcade Scoreboard (Cheer & Views Bar) */}
-          <div className="w-full pt-4 border-t-2 border-black flex items-center justify-center gap-3 sm:gap-6 text-xs font-mono font-bold">
-            {/* Views count */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black bg-white text-black shadow-brutal-xs">
-              <Eye className="w-3.5 h-3.5 text-black flex-shrink-0" />
-              <span className="text-[11px] sm:text-xs font-black">
-                VIEWS: {viewsCount.toLocaleString()}
+          {/* Utility chips */}
+          <div className="ml-auto flex items-center gap-1">
+            <button
+              onClick={() => setIsEditOpen(true)}
+              className="bevel-chip font-bold uppercase hover:brightness-110 active:brightness-90 transition-all"
+              style={{
+                backgroundColor: '#ecab37',
+                color: '#21242e',
+                fontSize: 9,
+                letterSpacing: '0.05em',
+                padding: '2px 6px',
+                borderRadius: 2,
+              }}
+            >
+              ✏ EDIT
+            </button>
+            <button
+              onClick={() => setIsShareOpen(true)}
+              className="bevel-chip font-bold uppercase hover:brightness-110 active:brightness-90 transition-all"
+              style={{
+                backgroundColor: '#ecab37',
+                color: '#21242e',
+                fontSize: 9,
+                letterSpacing: '0.05em',
+                padding: '2px 6px',
+                borderRadius: 2,
+              }}
+            >
+              ⬡ SHARE
+            </button>
+          </div>
+        </nav>
+
+        {/* 2. SKY SUB-NAV STRIP */}
+        <div
+          className="w-full flex items-center px-3 gap-3 select-none"
+          style={{
+            backgroundColor: '#9fbee7',
+            borderBottom: '2px solid #3d4f97',
+            height: 22,
+          }}
+        >
+          {['ABOUT', 'RESEARCH', 'KAIST CYPHY', 'SECURITY', 'HARDWARE'].map((w) => (
+            <span
+              key={w}
+              className="font-bold uppercase cursor-default hidden sm:inline"
+              style={{ color: '#21242e', fontSize: 9, letterSpacing: '0.05em' }}
+            >
+              {w}
+            </span>
+          ))}
+          <span
+            className="font-bold uppercase cursor-default sm:hidden"
+            style={{ color: '#21242e', fontSize: 9 }}
+          >
+            KAIST CYPHY · SECURITY · HARDWARE
+          </span>
+        </div>
+
+        {/* 3. LAVENDER HERO PANEL */}
+        <div
+          className="w-full flex items-center gap-4 px-4 py-4 relative overflow-hidden"
+          style={{ backgroundColor: '#acace7', borderBottom: '2px solid #3d4f97', minHeight: 120 }}
+        >
+          {/* Profile image */}
+          <div className="flex-shrink-0">
+            {profile.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatarUrl}
+                alt={profile.name}
+                style={{
+                  width: 90,
+                  height: 90,
+                  borderRadius: '50%',
+                  border: '3px solid #21242e',
+                  boxShadow: '4px 4px 0 #3d4f97',
+                  objectFit: 'cover',
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 90,
+                  height: 90,
+                  borderRadius: '50%',
+                  border: '3px solid #21242e',
+                  boxShadow: '4px 4px 0 #3d4f97',
+                  backgroundColor: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 32,
+                }}
+              >
+                👤
+              </div>
+            )}
+          </div>
+
+          {/* Name + handle + status */}
+          <div className="flex-1 min-w-0">
+            <h1
+              className="font-black leading-none nt-display break-keep"
+              style={{ color: '#ffffff', fontSize: 'clamp(20px, 5vw, 32px)' }}
+            >
+              {profile.name}
+            </h1>
+            <p
+              className="font-bold mt-1"
+              style={{ color: '#21242e', fontSize: 11 }}
+            >
+              {profile.handle}
+            </p>
+            {profile.statusBadge && (
+              <p
+                className="mt-1 font-medium"
+                style={{ color: '#3d4f97', fontSize: 10 }}
+              >
+                {profile.statusBadge}
+              </p>
+            )}
+            {profile.location && (
+              <p style={{ color: '#60619c', fontSize: 10, marginTop: 2 }}>{profile.location}</p>
+            )}
+          </div>
+
+          {/* Signal orange forward arrow */}
+          <button
+            onClick={() => setIsGuestbookOpen(true)}
+            title="방명록 쓰기"
+            className="bevel-chip flex-shrink-0 flex items-center justify-center hover:brightness-110 active:brightness-90 transition-all"
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              backgroundColor: '#f68d1f',
+            }}
+          >
+            <ChevronRight className="text-white" style={{ width: 20, height: 20 }} />
+          </button>
+        </div>
+
+        {/* 4. TWO-COLUMN BODY */}
+        <div
+          className="w-full flex flex-col lg:flex-row items-start"
+          style={{ borderBottom: '2px solid #3d4f97' }}
+        >
+
+          {/* Content Column (67%) */}
+          <div className="w-full min-w-0 lg:flex-1 lg:border-r-2 lg:border-r-[#3d4f97]">
+
+            {/* Section bar — PROFILE */}
+            <div
+              className="flex items-center gap-1 px-3"
+              style={{
+                backgroundColor: '#7a8aba',
+                borderBottom: '1px solid #3d4f97',
+                height: 24,
+              }}
+            >
+              <span
+                className="font-bold uppercase text-white"
+                style={{ fontSize: 11, letterSpacing: '0.05em' }}
+              >
+                ≡ PROFILE
               </span>
             </div>
 
-            {/* Cheer / Like button */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={handleLike}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border-2 border-black bg-[#FF80B5] hover:bg-[#FFB5D5] text-black font-black shadow-brutal-sm hover:shadow-brutal hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
-                title="응원하기"
+            {/* Bio */}
+            <div
+              className="bg-white px-3 py-2"
+              style={{ borderBottom: '1px solid #3d4f97' }}
+            >
+              <p
+                className="whitespace-pre-line"
+                style={{ color: '#21242e', fontSize: 12, lineHeight: 1.4 }}
               >
-                <Heart
-                  className={`w-3.5 h-3.5 fill-black text-black transition-transform ${
-                    liked ? 'scale-125' : ''
-                  }`}
-                />
-                <span className="text-[11px] sm:text-xs">
-                  CHEER: {likesCount.toLocaleString()}
-                </span>
-              </button>
-
-              {/* Floating Particles Burst */}
-              {particles.map((p) => (
-                <span
-                  key={p.id}
-                  style={{
-                    transform: `translateX(${p.xOffset}px)`,
-                  }}
-                  className="pointer-events-none absolute -top-5 left-1/2 text-sm animate-heartFloat font-black select-none z-30 drop-shadow-[1px_1px_0px_#000]"
-                >
-                  {p.emoji}
-                </span>
-              ))}
+                {profile.bio}
+              </p>
             </div>
+
+            {/* Tags */}
+            {profile.tags && profile.tags.length > 0 && (
+              <div
+                className="flex flex-wrap gap-1 px-3 py-2"
+                style={{ backgroundColor: '#dedede', borderBottom: '1px solid #3d4f97' }}
+              >
+                {profile.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="font-bold"
+                    style={{
+                      backgroundColor: '#ffffff',
+                      color: '#3d4f97',
+                      fontSize: 10,
+                      padding: '1px 6px',
+                      border: '1px solid #3d4f97',
+                      borderRadius: 2,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Section bar — LINKS */}
+            <div
+              className="flex items-center gap-1 px-3"
+              style={{
+                backgroundColor: '#7a8aba',
+                borderBottom: '1px solid #3d4f97',
+                height: 24,
+              }}
+            >
+              <span
+                className="font-bold uppercase text-white"
+                style={{ fontSize: 11, letterSpacing: '0.05em' }}
+              >
+                ≡ LINKS
+              </span>
+            </div>
+
+            {/* Link news-rows */}
+            {profile.links.map((link) => (
+              <LinkItemCard key={link.id} item={link} />
+            ))}
+
+            {/* Scoreboard — views + like */}
+            <div
+              className="flex items-center gap-3 px-3 py-2"
+              style={{ backgroundColor: '#8ba1d4', borderTop: '2px solid #3d4f97' }}
+            >
+              {/* Views */}
+              <div
+                className="flex items-center gap-1 font-bold"
+                style={{
+                  backgroundColor: '#ffffff',
+                  padding: '3px 8px',
+                  border: '1px solid #3d4f97',
+                  borderRadius: 2,
+                  fontSize: 10,
+                  color: '#21242e',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                <Eye style={{ width: 12, height: 12, color: '#3d4f97', flexShrink: 0 }} />
+                <span className="uppercase">VIEWS: {viewsCount.toLocaleString()}</span>
+              </div>
+
+              {/* Like / Cheer button */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={handleLike}
+                  className="bevel-chip flex items-center gap-1 font-black uppercase hover:brightness-110 active:brightness-90 transition-all"
+                  style={{
+                    backgroundColor: '#f68d1f',
+                    color: '#ffffff',
+                    fontSize: 10,
+                    letterSpacing: '0.05em',
+                    padding: '3px 8px',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Heart
+                    className={`transition-transform ${liked ? 'scale-125' : ''}`}
+                    style={{ width: 12, height: 12, fill: '#ffffff', flexShrink: 0 }}
+                  />
+                  CHEER: {likesCount.toLocaleString()}
+                </button>
+
+                {/* Floating particles */}
+                {particles.map((p) => (
+                  <span
+                    key={p.id}
+                    style={{ transform: `translateX(${p.xOffset}px)` }}
+                    className="pointer-events-none absolute -top-5 left-1/2 text-sm animate-heartFloat select-none z-30"
+                  >
+                    {p.emoji}
+                  </span>
+                ))}
+              </div>
+            </div>
+
           </div>
 
-          {/* Footer */}
-          <footer className="w-full pt-4 mt-2 text-center">
-            <p className="font-mono font-bold text-[10.5px] text-zinc-800 dark:text-zinc-400">
-              © {new Date().getFullYear()} {profile.name} · ALL RIGHTS RESERVED
-            </p>
-          </footer>
-        </main>
-      </div>
+          {/* Right Action Rail (33%) */}
+          <div
+            className="w-full lg:w-[240px] flex-shrink-0 border-t-2 border-t-[#3d4f97] lg:border-t-0"
+          >
+            {/* GitHub button — carbon slab */}
+            {profile.socials.map((s) => (
+              <a
+                key={s.platform}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="halftone w-full flex items-center gap-2 px-3 py-2.5 hover:brightness-110 transition-all"
+                style={{
+                  backgroundColor: '#21242e',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  borderBottom: '1px solid #3d4f97',
+                  display: 'flex',
+                }}
+              >
+                <span style={{ color: '#f68d1f', fontSize: 14 }}>⊞</span>
+                <span
+                  className="flex-1 font-bold uppercase"
+                  style={{ fontSize: 11, letterSpacing: '0.05em' }}
+                >
+                  {s.label}
+                </span>
+                <ChevronRight style={{ width: 14, height: 14, color: '#f68d1f', flexShrink: 0 }} />
+              </a>
+            ))}
 
-      {/* Bottom Floating Theme Switcher */}
-      <div className="mt-4 sm:mt-5 z-20">
-        <ThemeSwitcher
-          currentTheme={profile.theme}
-          onSelectTheme={handleThemeSelect}
-        />
+            {/* Guestbook button — carbon slab */}
+            <button
+              onClick={() => setIsGuestbookOpen(true)}
+              className="halftone w-full flex items-center gap-2 px-3 py-2.5 hover:brightness-110 transition-all"
+              style={{
+                backgroundColor: '#21242e',
+                color: '#ffffff',
+                borderBottom: '1px solid #3d4f97',
+                width: '100%',
+              }}
+            >
+              <span style={{ color: '#ecab37', fontSize: 14 }}>💌</span>
+              <span
+                className="flex-1 text-left font-bold uppercase"
+                style={{ fontSize: 11, letterSpacing: '0.05em' }}
+              >
+                GUESTBOOK
+              </span>
+              <ChevronRight style={{ width: 14, height: 14, color: '#f68d1f', flexShrink: 0 }} />
+            </button>
+
+            {/* Info box */}
+            <div style={{ borderBottom: '1px solid #3d4f97' }}>
+              <div
+                className="font-bold uppercase"
+                style={{
+                  backgroundColor: '#ecab37',
+                  color: '#21242e',
+                  fontSize: 10,
+                  letterSpacing: '0.05em',
+                  padding: '3px 12px',
+                }}
+              >
+                WHAT IS — CYPHY LAB
+              </div>
+              <div className="bg-white px-3 py-2">
+                <p style={{ color: '#21242e', fontSize: 12, lineHeight: 1.4 }}>
+                  CyPhy Lab at KAIST bridges the physical and digital worlds through security and hardware research.
+                </p>
+              </div>
+            </div>
+
+            {/* Promo card */}
+            <div
+              className="px-3 py-3"
+              style={{ backgroundColor: '#acace7', borderBottom: '1px solid #3d4f97' }}
+            >
+              <p
+                className="font-bold uppercase"
+                style={{ color: '#21242e', fontSize: 9, letterSpacing: '0.05em', marginBottom: 4 }}
+              >
+                RESEARCH AREAS
+              </p>
+              <p
+                className="font-black nt-display"
+                style={{ color: '#ffffff', fontSize: 20, lineHeight: 1.1 }}
+              >
+                SECURITY
+              </p>
+              <p
+                className="font-black nt-display"
+                style={{ color: '#ffffff', fontSize: 20, lineHeight: 1.1 }}
+              >
+                HARDWARE
+              </p>
+              <p style={{ color: '#3d4f97', fontSize: 10, marginTop: 6, fontWeight: 600 }}>
+                @ KAIST cyphy Lab
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        {/* 5. CARBON FOOTER */}
+        <footer
+          className="halftone w-full flex items-center justify-between px-4 py-2"
+          style={{ backgroundColor: '#21242e' }}
+        >
+          <span style={{ color: '#9fbee7', fontSize: 10 }}>
+            © {new Date().getFullYear()} {profile.name} · ALL RIGHTS RESERVED
+          </span>
+          <span
+            className="font-bold uppercase"
+            style={{
+              backgroundColor: '#ecab37',
+              color: '#21242e',
+              fontSize: 9,
+              letterSpacing: '0.05em',
+              padding: '1px 5px',
+              borderRadius: 2,
+            }}
+          >
+            PRIVACY CERTIFIED
+          </span>
+        </footer>
+
       </div>
 
       {/* Modals */}
