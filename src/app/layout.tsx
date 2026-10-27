@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "김소정 (Sojeong Kim) | KAIST cyphy Lab",
-  description: "KAIST cyphy 랩 소속 인턴. 보안 및 하드웨어 분야를 연구하고 있는 김소정(@sojeongyy)의 링크 페이지입니다.",
+  title: "김소정 (Sojeong Kim) — MyLink",
+  description: "KAIST CyPhy 연구실 김소정(@sojeongyy)의 공식 마이링크 포트폴리오. 시스템 보안 및 하드웨어 아키텍처 연구.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
