@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Heart, Eye, ChevronRight } from 'lucide-react';
+import { Heart, ArrowUpRight, MessageSquareHeart, Edit3, ChevronRight, Eye } from 'lucide-react';
 import { ProfileData } from '@/types/profile';
 import { INITIAL_PROFILE } from '@/data/initialProfile';
 import { LinkItemCard } from './LinkItemCard';
@@ -19,6 +19,7 @@ interface FloatingParticle {
 
 export const ProfileView: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData>(INITIAL_PROFILE);
+  const [activeTab, setActiveTab] = useState<'intro' | 'links' | 'skills' | 'projects'>('intro');
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isGuestbookOpen, setIsGuestbookOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);

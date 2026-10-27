@@ -19,8 +19,8 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #F2F4F6;
+  color: #191F28;
   font-family: var(--font-sans);
   overflow-x: hidden;
   min-width: 280px;
@@ -132,41 +132,37 @@ body {
 }
 
 /* ══════════════════════════════════════════
-   Nintendo.com 2001 Design Tokens & Utilities
+   Toss Design System (TDS) Utilities
    ══════════════════════════════════════════ */
 
-/* Halftone dot texture — carbon command slabs */
-.halftone {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-  background-size: 4px 4px;
+:root {
+  --toss-blue: #3182F6;
+  --toss-blue-pressed: #1B64DA;
+  --toss-blue-weak: #E8F3FF;
+  --toss-grey-900: #191F28;
+  --toss-grey-800: #333D4B;
+  --toss-grey-700: #4E5968;
+  --toss-grey-600: #6B7684;
+  --toss-grey-500: #8B95A1;
+  --toss-grey-400: #B0B8C1;
+  --toss-grey-300: #D1D6DB;
+  --toss-grey-200: #E5E8EB;
+  --toss-grey-100: #F2F4F6;
+  --toss-grey-50: #F9FAFB;
 }
 
-/* Bevel Plate — raised content panel */
-.bevel-plate {
-  border-top:    1px solid #9fbee7;
-  border-left:   1px solid #9fbee7;
-  border-right:  2px solid #3d4f97;
-  border-bottom: 2px solid #3d4f97;
+.toss-card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-/* Bevel Chip — utility button */
-.bevel-chip {
-  border-top:    1px solid rgba(255,255,255,0.35);
-  border-left:   1px solid rgba(255,255,255,0.25);
-  border-right:  1px solid rgba(0,0,0,0.25);
-  border-bottom: 2px solid rgba(0,0,0,0.35);
+.toss-modal-shadow {
+  box-shadow: 0 12px 32px rgba(25, 31, 40, 0.12), 0 2px 6px rgba(25, 31, 40, 0.06);
 }
 
-/* Chamfered 45° corners */
-.chamfer-sm {
-  clip-path: polygon(6px 0%,calc(100% - 6px) 0%,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0% calc(100% - 6px),0% 6px);
+.toss-btn-press {
+  transition: transform 0.12s cubic-bezier(0.22, 0.61, 0.36, 1), background-color 0.12s ease;
 }
-.chamfer-md {
-  clip-path: polygon(10px 0%,calc(100% - 10px) 0%,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0% calc(100% - 10px),0% 10px);
+.toss-btn-press:active {
+  transform: scale(0.97);
 }
 
-/* Display text — outlined box-art style */
-.nt-display {
-  -webkit-text-stroke: 1.5px #21242e;
-  text-shadow: 3px 3px 0 #3d4f97;
-}
